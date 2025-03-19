@@ -1,26 +1,38 @@
-let task = [];
-let currentFilter = "all";
-
-const taskList = document.getElementById("taskList");
+const tastInput = document.getElementById("taskInput");
 const addBtn = document.getElementById("addBtn");
+const taskList = document.getElementById("taskList");
+let tasks = [
+    {
+        text:"ffff4",createdAt:new Date(2025, 1, 14),
+    },{
+        text:"7767764",createdAt:new Date(2025, 1, 16),
+    }
+];
 
-const taskTnput = document.getElementById("taskInput");
+function update() {
+    taskList.innerHTML = '';
+    taskList.forEach(task => {
+        const li = document.createElement('li');
+        const span = document.createElement('span');
+        span.className = 'task-text';
+        span.textContent = task.text;
+        li.appendChild(span);
+        taskList.appendChild(li);
+    })
+}
 
 function addTask() {
-    const currenTaskCount = task.length + 1;
-    if (taskTnput.value === "") {
-        alert("任务不能为空");
+    if(!tastInput.value) {
+        alert('please enter a task');
+        return;
     }
-
-    if (){}
-
-    const newTask = {
-        id: Date.now(),
-        text: taskTnput.value,
-        completed: false,
-        createAt: new Date(),
-    }
-
-    task.push(newTask);
-    taskTnput.value = "";
+    const newtask = {
+        text: tastInput.value,
+        createdAt: new Date(),
+    };
+    tasks.push(newtask);
+    tastInput.value = '';
+    update();
 }
+addBtn.addEventListener('click',addTask);
+update()
