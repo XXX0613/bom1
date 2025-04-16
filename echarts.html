@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,6 +40,7 @@
         }
     </style>
 </head>
+
 <body>
     <h2>图表示例集合</h2>
     <div class="chart-container">
@@ -61,6 +63,10 @@
             <h3>4.基础散点图</h3>
             <div id="scatterChart" class="chart"></div>
         </div>
+        <div class="chart-box">
+            <h3>5.基础雷达图</h3>
+            <div id="radarChart" class="chart"></div>
+        </div>
     </div>
 
 
@@ -76,28 +82,28 @@
             legend: {
                 data: ['销售额']
             },
-           xAxis: {
-                type:'category',
-                data:['周一','周二','周三','周四','周五','周六','周日']
-           },
-           yAxis:{
-                type:'value',
-                name:'销售额',
-           },
-           series: [
-            {
+            xAxis: {
+                type: 'category',
+                data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+            },
+            yAxis: {
+                type: 'value',
                 name: '销售额',
-                data: [120, 200, 150, 80, 70, 110, 130],
-                type: 'line',
-                smooth: true,
-                markPoint: {
-                    data: [
-                        { type: 'max', name: '最大值' },
-                        { type: 'min', name: '最小值' }
-                    ]
+            },
+            series: [
+                {
+                    name: '销售额',
+                    data: [120, 200, 150, 80, 70, 110, 130],
+                    type: 'line',
+                    smooth: true,
+                    markPoint: {
+                        data: [
+                            { type: 'max', name: '最大值' },
+                            { type: 'min', name: '最小值' }
+                        ]
+                    }
                 }
-            }
-           ]
+            ]
         }
 
         lineChart.setOption(lineOption);
@@ -119,17 +125,17 @@
                 name: '人数'
             },
             series: [
-            {
+                {
                     name: '人数',
                     type: 'bar',
                     data: [5, 20, 36, 10, 10],
-                    label:{
-                        show:true,
-                        position:'top'
+                    label: {
+                        show: true,
+                        position: 'top'
                     },
-                    itemStyle:{
+                    itemStyle: {
                         color(params) {
-                            const colorList = ['#c23531','#2f4554', '#61a0a8', '#d48265','#91c7ae'];
+                            const colorList = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae'];
                             return colorList[params.dataIndex];
                         }
                     }
@@ -156,16 +162,16 @@
             series: [
                 {
                     name: '访问来源',
-                   type: 'pie',
-                   radius: '60%',
-                   center: ['50%', '50%'],
-                   data: [
+                    type: 'pie',
+                    radius: '60%',
+                    center: ['50%', '50%'],
+                    data: [
                         { value: 335, name: '直接访问' },
                         { value: 310, name: '邮件营销' },
                         { value: 234, name: '联盟广告' },
                         { value: 135, name: '视频广告' },
                         { value: 1548, name: '搜索引擎' }
-                   ]                   
+                    ]
                 }
             ]
         }
@@ -178,7 +184,7 @@
             },
             tooltip: {
                 trigger: 'item',
-                formatter:function(params){
+                formatter: function (params) {
                     return `身高: ${params.value[0]} cm<br/>体重:${params.value[1]}kg`
                 }
             },
@@ -214,12 +220,53 @@
             ]
         };
         scatterChart.setOption(scatterOption);
-        window.addEventListener('resize',function(){
+
+        const radarChart1 = echarts.init(document.querySelector('#radarChart'));
+        const radarOption = {
+            title: {
+                text: 'Basic Radar'
+            },
+            legend: {
+                data: ['Allocated Budget', 'Actual Spending']
+            },
+            radar: {
+                // shape: 'circle',
+                indicator: [
+                    { name: 'Sales', max: 6500 },
+                    { name: 'Administration', max: 16000 },
+                    { name: 'Information Technology', max: 30000 },
+                    { name: 'Customer Support', max: 38000 },
+                    { name: 'Development', max: 52000 },
+                    { name: 'Marketing', max: 25000 }
+                ]
+            },
+            series: [
+                {
+                    name: 'Budget vs spending',
+                    type: 'radar',
+                    data: [
+                        {
+                            value: [4200, 3000, 20000, 35000, 50000, 18000],
+                            name: 'Allocated Budget'
+                        },
+                        {
+                            value: [5000, 14000, 28000, 26000, 42000, 21000],
+                            name: 'Actual Spending'
+                        }
+                    ]
+                }
+            ]
+        };
+        radarChart1.setOption(radarOption);
+
+        window.addEventListener('resize', function () {
             lineChart.resize();
             barChart.resize();
             pieChart.resize();
             scatterChart.resize();
+            radarChart1.resize();
         });
     </script>
 </body>
+
 </html>
