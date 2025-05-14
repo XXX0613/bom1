@@ -335,6 +335,7 @@
         const tableBody = document.getElementById('tableBody');
         const noResults = document.getElementById('noResults');
 
+        let historyList = JSON.parse(localStorage.getItem('searchHistory')) || [];
 
         function debounce(func, delay) {
             let timer;
@@ -392,6 +393,86 @@
             })
             initTable(filtereData);
         }
+
+        function addToHistory(keyword) {
+            historyList = historyList.filter(item => item !== keyword);
+            historyList.unshift(keyword);
+            if (historyList.length > 1) {
+                historyList = historyList.slice(0, );
+            }
+            localStorage.setItem('searchHistory', JSON.stringify(historyList));
+
+            renderHistory();
+        }
+
+        function renderHistory() {
+            searchHistory.innerHTML = '';
+            historyList.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                const textSpan = document.createElement('span');
+                textSpan.textContent = item;
+                textSpan.style.flexGrow = "1";
+                textSpan.style.cursor = "pointer";
+
+                historyItem.addEventListener('click', function(event) {
+                    if(!event.target.classList.contains("delete-history")) {
+                        searchInput.value = item;
+                        searchHistory.style.display = "none";
+                        searchData(item);
+                    }
+                })
+
+                const deleteBtn = document.createElement("span");
+                deleteBtn.className  = "delete-history";
+                deleteBtn.innerHTML = "x";
+                deleteBtn.addEventListener("click", function(e) {
+                    e.stopPropagation();
+                    deleteHistory(item);
+                });
+                historyItem.appendChild(textSpan);
+                historyItem.appendChild(deleteBtn);
+                searchHistory.appendChild(historyItem);
+            });
+        }
+
+        function deleteHistory(keyword) {
+            historyList = historyList.filter(item => item !== keyword);
+            localStorage.setItem('searchHistory', JSON.stringify(historyList));
+            renderHistory();
+            if (historyList.length === 0) {
+                searchHistory.style.display = 'none';
+            }
+        }
+
+        searchInput.addEventListener('keyup', function(e) { 
+            if (e.key === 'Enter') {
+                const keyword = this.value.trim();
+                if(keyword) {
+                    addToHistory(keyword);
+                }
+            }
+        })
+
+        searchInput.addEventListener('blur',function() {
+            const keyword = this.value.trim();
+            if(keyword) {
+                addToHistory(keyword);
+            }
+        })
+
+        searchInput.addEventListener('focus',function() { 
+            if(historyList.length > 0) {
+                renderHistory();
+                searchHistory.style.display = 'block';
+            }
+        })
+
+        document.addEventListener('click', function(e) {
+            if(!searchInput.contains(e.target) && !searchHistory.contains(e.target)) {
+                searchHistory.style.display = 'none';
+            }
+        })
 
         searchInput.addEventListener('input', debounce(function(){
             const keyword = searchInput.value.trim();
